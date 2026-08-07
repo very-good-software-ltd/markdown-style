@@ -1,6 +1,11 @@
 name: CI
 
-on: push
+on:
+  push:
+    # A release tag already had its commit checked on the branch, so don't
+    # re-run for the tag push.
+    tags-ignore:
+      - '**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
