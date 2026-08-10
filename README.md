@@ -34,9 +34,9 @@ When it is unsure, it leaves the text joined rather than guess wrong, so a bad s
 With Homebrew, on Apple Silicon macOS:
 
 ```sh
-brew tap christophgockel/tap
-brew trust christophgockel/tap
-brew install christophgockel/tap/markdown-style
+brew tap very-good-software-ltd/tap
+brew trust very-good-software-ltd/tap
+brew install very-good-software-ltd/tap/markdown-style
 ```
 
 `brew trust` is needed because Homebrew asks you to trust a third-party tap before it will load a formula from it.
@@ -51,7 +51,7 @@ Or use the prebuilt image.
 It is built for CI (see [Continuous integration](#continuous-integration)) but also runs directly, linting the mounted directory by default:
 
 ```sh
-docker run --rm -v "$PWD:/work" ghcr.io/christophgockel/markdown-style:latest
+docker run --rm -v "$PWD:/work" ghcr.io/very-good-software-ltd/markdown-style:latest
 ```
 
 
@@ -91,13 +91,13 @@ markdown-style explain sentence-per-line
 
 ### Continuous integration
 
-The prebuilt image at `ghcr.io/christophgockel/markdown-style` is the simplest way to run the tool in CI: declare it as the job image and call the tool.
+The prebuilt image at `ghcr.io/very-good-software-ltd/markdown-style` is the simplest way to run the tool in CI: declare it as the job image and call the tool.
 
 On GitLab CI:
 
 ```yaml
 lint-markdown:
-  image: ghcr.io/christophgockel/markdown-style:latest
+  image: ghcr.io/very-good-software-ltd/markdown-style:latest
   script:
     - markdown-style lint .
 ```
@@ -110,7 +110,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: docker://ghcr.io/christophgockel/markdown-style:latest
+      - uses: docker://ghcr.io/very-good-software-ltd/markdown-style:latest
         with:
           args: lint --format github .
 ```

@@ -12,7 +12,7 @@
 FROM busybox:stable-musl
 
 # Links the ghcr.io package to this repository.
-LABEL org.opencontainers.image.source="https://github.com/christophgockel/very-good-markdown-style"
+LABEL org.opencontainers.image.source="https://github.com/very-good-software-ltd/markdown-style"
 
 COPY markdown-style /usr/local/bin/markdown-style
 

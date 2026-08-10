@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - A prebuilt Linux binary (`x86_64-unknown-linux-musl`) is now published with each release.
-- A prebuilt Docker image is now published to `ghcr.io/christophgockel/markdown-style` with each release, carrying only the tool so it can run checks in any repository.
+- A prebuilt Docker image is now published to `ghcr.io/very-good-software-ltd/markdown-style` with each release, carrying only the tool so it can run checks in any repository.
 
 
 ## [0.5.0] - 2026-08-07
@@ -85,11 +85,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Idempotent formatting, so running `format` twice makes no further changes.
 - `rules --markdown` generates the rule catalogue in `docs/rules.md`, kept current by a test.
 
-[0.5.1]: https://github.com/christophgockel/very-good-markdown-style/compare/0.5.0...0.5.1
-[0.5.0]: https://github.com/christophgockel/very-good-markdown-style/compare/0.4.1...0.5.0
-[0.4.1]: https://github.com/christophgockel/very-good-markdown-style/compare/0.4.0...0.4.1
-[0.4.0]: https://github.com/christophgockel/very-good-markdown-style/compare/0.3.0...0.4.0
-[0.3.0]: https://github.com/christophgockel/very-good-markdown-style/compare/0.2.1...0.3.0
-[0.2.1]: https://github.com/christophgockel/very-good-markdown-style/compare/0.2.0...0.2.1
-[0.2.0]: https://github.com/christophgockel/very-good-markdown-style/compare/0.1.0...0.2.0
-[0.1.0]: https://github.com/christophgockel/very-good-markdown-style/releases/tag/0.1.0
+[0.5.1]: https://github.com/very-good-software-ltd/markdown-style/compare/0.5.0...0.5.1
+[0.5.0]: https://github.com/very-good-software-ltd/markdown-style/compare/0.4.1...0.5.0
+[0.4.1]: https://github.com/very-good-software-ltd/markdown-style/compare/0.4.0...0.4.1
+[0.4.0]: https://github.com/very-good-software-ltd/markdown-style/compare/0.3.0...0.4.0
+[0.3.0]: https://github.com/very-good-software-ltd/markdown-style/compare/0.2.1...0.3.0
+[0.2.1]: https://github.com/very-good-software-ltd/markdown-style/compare/0.2.0...0.2.1
+[0.2.0]: https://github.com/very-good-software-ltd/markdown-style/compare/0.1.0...0.2.0
+[0.1.0]: https://github.com/very-good-software-ltd/markdown-style/releases/tag/0.1.0
