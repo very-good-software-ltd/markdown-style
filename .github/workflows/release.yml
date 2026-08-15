@@ -16,9 +16,20 @@ jobs:
         include:
           - target: aarch64-apple-darwin
             runner: macos-14
+            archive: markdown-style-aarch64-apple-darwin.tar.gz
           - target: x86_64-unknown-linux-musl
             runner: ubuntu-24.04
+            archive: markdown-style-x86_64-unknown-linux-musl.tar.gz
+          - target: x86_64-pc-windows-msvc
+            runner: windows-2025
+            archive: markdown-style-x86_64-pc-windows-msvc.zip
     runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        # Windows runners default to PowerShell, where `$TAG` is not an
+        # environment variable. Bash is present on all three, so every step
+        # below reads the same whatever it runs on.
+        shell: bash
     steps:
       - uses: actions/checkout@v7
 
@@ -31,14 +42,22 @@ jobs:
       - name: Build
         run: cargo build --release --locked --target ${{ matrix.target }}
 
+      # Windows gets a zip rather than a tarball, because that is what Windows
+      # users and winget expect.
       - name: Package
-        run: tar -C target/${{ matrix.target }}/release -czf markdown-style-${{ matrix.target }}.tar.gz markdown-style
+        if: runner.os != 'Windows'
+        run: tar -C target/${{ matrix.target }}/release -czf ${{ matrix.archive }} markdown-style
+
+      - name: Package
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path target/${{ matrix.target }}/release/markdown-style.exe -DestinationPath ${{ matrix.archive }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: markdown-style-${{ matrix.target }}
-          path: markdown-style-${{ matrix.target }}.tar.gz
+          path: ${{ matrix.archive }}
 
       - name: Attach to release
         if: github.event_name == 'release'
@@ -46,8 +65,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}
         run: |
-          shasum -a 256 markdown-style-${{ matrix.target }}.tar.gz
-          gh release upload "$TAG" markdown-style-${{ matrix.target }}.tar.gz --clobber
+          shasum -a 256 ${{ matrix.archive }}
+          gh release upload "$TAG" ${{ matrix.archive }} --clobber
 
       # Only the Linux binary goes into the image, so only that target publishes.
       - name: Publish image
