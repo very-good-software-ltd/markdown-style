@@ -144,6 +144,8 @@ Some rules _fix_ what they find, others only _flag_ it, because fixing them woul
 | `trailing-whitespace` | fix | Strip trailing whitespace, keep intentional hard breaks. |
 | `hard-tabs` | fix | Expand tabs to spaces outside code. |
 | `final-newline` | fix | End with a newline and at most one trailing blank line. |
+| `line-endings` | fix | One line-ending style per file, the file's own majority. |
+| `byte-order-mark` | fix | No byte order mark at the start of a file. |
 | `block-spacing` | fix | Consistent blank lines around blocks and headings. |
 | `heading-increment` | flag | Heading levels increase one at a time. |
 | `heading-style` | fix | ATX headings, not setext underlines. |
