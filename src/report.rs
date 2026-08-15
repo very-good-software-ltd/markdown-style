@@ -54,12 +54,21 @@ pub fn github(path: &str, violations: &[Violation]) -> String {
     let mut ordered: Vec<&Violation> = violations.iter().collect();
     ordered.sort_by_key(|violation| (violation.span.line, violation.span.column));
 
+    // GitHub matches the annotation against a repository path, which always
+    // uses forward slashes, so a Windows runner's backslashes have to be
+    // translated or the annotation silently fails to attach to the diff. This
+    // is unconditional rather than Windows-only so the behaviour is covered by
+    // the tests everywhere; the cost is mistranslating a path on a system that
+    // allows a literal backslash in a filename, which at worst leaves that one
+    // annotation unattached.
+    let path = path.replace('\\', "/");
+
     let mut out = String::new();
     for violation in ordered {
         let span = &violation.span;
         out.push_str(&format!(
             "::error file={},line={},col={},title={}::{}\n",
-            escape_property(path),
+            escape_property(&path),
             span.line,
             span.column,
             escape_property(violation.rule_id),
@@ -297,6 +306,13 @@ mod tests {
             "got:\n{out}"
         );
         assert!(out.ends_with('\n'));
+    }
+
+    #[test]
+    fn github_reports_a_windows_path_with_forward_slashes() {
+        let source = "# Title\n\ntext   \n";
+        let out = github("docs\\guide\\a.md", &detect(source));
+        assert!(out.contains("file=docs/guide/a.md,"), "got:\n{out}");
     }
 
     #[test]

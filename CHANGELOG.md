@@ -18,6 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Fixers that insert a line ending now follow the document's majority style.
   Previously a single CRLF anywhere in an otherwise LF file made every inserted line ending a CRLF.
+- `lint --format github` now reports paths with forward slashes.
+  On a Windows runner the backslashes meant GitHub could not match the path against the repository, so the annotation never attached to the diff.
 
 
 ## [0.5.1] - 2026-08-07
