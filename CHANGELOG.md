@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-08-15
+
 ### Fixed
 
 - The Windows binary is now attached to the release.
@@ -122,7 +124,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Idempotent formatting, so running `format` twice makes no further changes.
 - `rules --markdown` generates the rule catalogue in `docs/rules.md`, kept current by a test.
 
-[Unreleased]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.1...HEAD
+[Unreleased]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.2...HEAD
+[0.6.2]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.1...0.6.2
 [0.6.1]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/very-good-software-ltd/markdown-style/compare/0.5.1...0.6.0
 [0.5.1]: https://github.com/very-good-software-ltd/markdown-style/compare/0.5.0...0.5.1
