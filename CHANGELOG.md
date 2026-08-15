@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-08-15
+
+### Added
+
+- A prebuilt Windows binary (`x86_64-pc-windows-msvc`) is now published with each release.
+  The test suite also runs on Windows in CI.
+
+
 ## [0.6.0] - 2026-08-15
 
 ### Added
@@ -108,7 +116,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Idempotent formatting, so running `format` twice makes no further changes.
 - `rules --markdown` generates the rule catalogue in `docs/rules.md`, kept current by a test.
 
-[Unreleased]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.1...HEAD
+[0.6.1]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/very-good-software-ltd/markdown-style/compare/0.5.1...0.6.0
 [0.5.1]: https://github.com/very-good-software-ltd/markdown-style/compare/0.5.0...0.5.1
 [0.5.0]: https://github.com/very-good-software-ltd/markdown-style/compare/0.4.1...0.5.0
