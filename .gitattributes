@@ -1,0 +1,10 @@
+# Check every text file out with LF, whatever a contributor's core.autocrlf is
+# set to. Git for Windows defaults it to true, which would otherwise give a
+# Windows clone CRLF working files and fail tests/docs.rs, since that test
+# compares generated LF text against the bytes of docs/rules.md.
+#
+# The CRLF fixtures the line-endings rule is tested with are Rust string
+# literals rather than files on disk, so nothing here needs an exception. A
+# fixture that has to keep its CRLF on disk would need one.
+* text=auto eol=lf
+
