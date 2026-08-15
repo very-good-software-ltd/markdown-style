@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- The Windows binary is now attached to the release.
+  In 0.6.1 the release job printed the archive's checksum before uploading it and failed there, so the zip never reached the release page.
+
+
 ## [0.6.1] - 2026-08-15
 
 ### Added

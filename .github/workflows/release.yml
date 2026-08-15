@@ -64,9 +64,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.event.release.tag_name }}
-        run: |
-          shasum -a 256 ${{ matrix.archive }}
-          gh release upload "$TAG" ${{ matrix.archive }} --clobber
+        run: gh release upload "$TAG" ${{ matrix.archive }} --clobber
 
       # Only the Linux binary goes into the image, so only that target publishes.
       - name: Publish image
