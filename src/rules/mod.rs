@@ -1,6 +1,7 @@
 pub mod atx_heading;
 pub mod block_spacing;
 pub mod blockquote_marker;
+pub mod byte_order_mark;
 pub mod code_fence;
 pub mod continuation_indent;
 pub mod emphasis;

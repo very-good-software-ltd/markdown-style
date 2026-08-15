@@ -6,6 +6,17 @@ A rule is flag-only when fixing it would mean guessing at your intent, so the to
 This page is generated from the rules themselves, and the reasoning is the same text `markdown-style explain <rule>` prints.
 
 
+## byte-order-mark
+
+_Fix._
+A leading byte order mark is invisible and travels into your text.
+
+Some tools, notably Windows PowerShell, write a byte order mark at the start of a UTF-8 file.
+Markdown is read as UTF-8 everywhere, so the mark carries no information, but it is a real character sitting in front of the first one you wrote.
+Nothing renders it, so it survives every review, and any fix that rewrites the first line carries it along into the middle of the text: a title that reads `# Title` actually begins with an invisible character.
+Removing it leaves a file that is still valid UTF-8 and says exactly what it appears to say.
+
+
 ## line-endings
 
 _Fix._

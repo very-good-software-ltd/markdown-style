@@ -16,8 +16,11 @@ pub use violation::{Span, Violation};
 /// The built-in, opinionated rule set. Every rule is always on.
 pub fn default_rules() -> Vec<Box<dyn Rule>> {
     vec![
-        // First, so every later fixer works on a document whose line endings
-        // are already consistent.
+        // These two come first, so every later fixer works on a document whose
+        // bytes are already normalised. The byte order mark in particular has
+        // to go before any rule can rewrite the first line and carry it into
+        // the text.
+        Box::new(rules::byte_order_mark::ByteOrderMark),
         Box::new(rules::line_endings::LineEndings),
         Box::new(rules::trailing_whitespace::TrailingWhitespace),
         Box::new(rules::hard_tabs::HardTabs),
@@ -85,6 +88,14 @@ mod tests {
     fn format_leaves_a_clean_document_untouched() {
         let clean = "# Title\n\nHello world\n";
         assert_eq!(format(clean, &default_rules()), clean);
+    }
+
+    #[test]
+    fn format_strips_a_byte_order_mark_before_anything_rewrites_the_line() {
+        // The mark used to survive as text: rewriting the setext heading
+        // carried it past the `# ` and into the middle of the title.
+        let source = "\u{feff}Title\n=====\n\nAlpha one.\n";
+        assert_eq!(format(source, &default_rules()), "# Title\n\nAlpha one.\n");
     }
 
     #[test]

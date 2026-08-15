@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- A `byte-order-mark` rule.
+  A file that starts with a UTF-8 byte order mark, as Windows PowerShell writes, now has it reported and removed.
+  The same character elsewhere in the document is a zero width no-break space rather than a byte order mark, so it is left alone.
+
 - A `line-endings` rule.
   A file that mixes LF and CRLF endings now has the minority endings reported and rewritten to the file's own majority style, with LF settling a tie.
   The rule takes no side between the two, so a file that is wholly LF or wholly CRLF is left exactly as it is.
@@ -18,6 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Fixers that insert a line ending now follow the document's majority style.
   Previously a single CRLF anywhere in an otherwise LF file made every inserted line ending a CRLF.
+- `format` no longer carries a leading byte order mark into the document text.
+  Any fix that rewrote the first line moved the mark past it, so a title fixed to `# Title` silently began with an invisible character, and the file then passed `lint` clean.
 - `lint --format github` now reports paths with forward slashes.
   On a Windows runner the backslashes meant GitHub could not match the path against the repository, so the annotation never attached to the diff.
 
