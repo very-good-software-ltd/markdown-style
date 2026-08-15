@@ -2,9 +2,11 @@ name: CI
 
 on:
   push:
-    # A release tag already had its commit checked on the branch, so don't
-    # re-run for the tag push.
-    tags-ignore:
+    # Defining a branch filter and no tag filter is what keeps tag pushes from
+    # re-running this: a release tag's commit was already checked on the branch.
+    # A workflow only runs for ref types it names, so filtering tags alone would
+    # stop it running for branches too.
+    branches:
       - '**'
 
 concurrency:
