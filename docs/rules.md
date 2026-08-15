@@ -6,6 +6,17 @@ A rule is flag-only when fixing it would mean guessing at your intent, so the to
 This page is generated from the rules themselves, and the reasoning is the same text `markdown-style explain <rule>` prints.
 
 
+## line-endings
+
+_Fix._
+Mixed line endings in one file show up as whole-file diffs.
+
+A file that mixes LF and CRLF line endings is invisible to read but noisy to work with: editors and version control disagree about where lines end, and a tool that rewrites the file can flip every line at once, burying a one-line change in a whole-file diff.
+The fix is the file's own majority style rather than a fixed choice, because CRLF is the normal convention on Windows and LF elsewhere, and neither is wrong.
+Only the minority endings are rewritten, so a file that is already consistent is left exactly as it is.
+LF settles a tie.
+
+
 ## trailing-whitespace
 
 _Fix._

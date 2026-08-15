@@ -121,6 +121,49 @@ fn format_rewrites_the_file_in_place() {
 }
 
 #[test]
+fn format_keeps_a_crlf_file_on_crlf() {
+    let dir = TempDir::new("format-crlf");
+    let file = dir.write("doc.md", "Title\r\n=====\r\n\r\ntext   \r\n");
+
+    let status = Command::new(BIN).arg("format").arg(&file).status().unwrap();
+
+    assert_eq!(status.code(), Some(0));
+    assert_eq!(
+        fs::read_to_string(&file).unwrap(),
+        "# Title\r\n\r\ntext\r\n"
+    );
+}
+
+#[test]
+fn format_rewrites_a_stray_line_ending_to_the_majority() {
+    let dir = TempDir::new("format-mixed");
+    let file = dir.write("doc.md", "# Title\n\nAlpha one.\r\nBravo two.\n");
+
+    let status = Command::new(BIN).arg("format").arg(&file).status().unwrap();
+
+    assert_eq!(status.code(), Some(0));
+    assert_eq!(
+        fs::read_to_string(&file).unwrap(),
+        "# Title\n\nAlpha one.\nBravo two.\n"
+    );
+}
+
+#[test]
+fn lint_reports_a_stray_line_ending() {
+    let dir = TempDir::new("lint-mixed");
+    let file = dir.write("doc.md", "# Title\n\nAlpha one.\r\nBravo two.\n");
+
+    let output = Command::new(BIN).arg("lint").arg(&file).output().unwrap();
+
+    assert_eq!(output.status.code(), Some(1));
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(
+        stdout.contains("line-endings: CRLF line ending in a file that mostly uses LF"),
+        "got:\n{stdout}"
+    );
+}
+
+#[test]
 fn format_reads_stdin_and_writes_stdout() {
     let mut child = Command::new(BIN)
         .arg("format")

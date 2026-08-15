@@ -8,6 +8,7 @@ pub mod final_newline;
 pub mod hard_tabs;
 pub mod heading_increment;
 pub mod heading_style;
+pub mod line_endings;
 pub mod list_marker;
 pub mod list_marker_space;
 pub mod nested_indent;

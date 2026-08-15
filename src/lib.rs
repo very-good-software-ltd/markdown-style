@@ -16,6 +16,9 @@ pub use violation::{Span, Violation};
 /// The built-in, opinionated rule set. Every rule is always on.
 pub fn default_rules() -> Vec<Box<dyn Rule>> {
     vec![
+        // First, so every later fixer works on a document whose line endings
+        // are already consistent.
+        Box::new(rules::line_endings::LineEndings),
         Box::new(rules::trailing_whitespace::TrailingWhitespace),
         Box::new(rules::hard_tabs::HardTabs),
         Box::new(rules::final_newline::FinalNewline),

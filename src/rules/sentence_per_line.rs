@@ -4,7 +4,7 @@ use crate::ast::{Node, NodeKind};
 use crate::document::Document;
 use crate::rule::Rule;
 use crate::sentence::{ends_with_sentence_terminator, split_sentences};
-use crate::text::{Line, split_lines};
+use crate::text::{Line, dominant_newline, split_lines};
 use crate::violation::{Span, Violation};
 
 /// The tool's core rule: within prose, every sentence begins on its own line.
@@ -64,11 +64,7 @@ enum Prefix {
 /// Detect and fix in one pass so the two halves can never disagree.
 fn rewrite(doc: &Document) -> (Vec<Violation>, String) {
     let lines = split_lines(&doc.source);
-    let newline = if doc.source.contains("\r\n") {
-        "\r\n"
-    } else {
-        "\n"
-    };
+    let newline = dominant_newline(&doc.source);
 
     let mut targets = Vec::new();
     collect(doc.tree(), 0, false, &mut targets);

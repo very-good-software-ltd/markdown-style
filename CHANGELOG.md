@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- A `line-endings` rule.
+  A file that mixes LF and CRLF endings now has the minority endings reported and rewritten to the file's own majority style, with LF settling a tie.
+  The rule takes no side between the two, so a file that is wholly LF or wholly CRLF is left exactly as it is.
+
+
+### Fixed
+
+- Fixers that insert a line ending now follow the document's majority style.
+  Previously a single CRLF anywhere in an otherwise LF file made every inserted line ending a CRLF.
+
+
 ## [0.5.1] - 2026-08-07
 
 ### Added

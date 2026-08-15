@@ -1,6 +1,6 @@
 use crate::document::Document;
 use crate::rule::Rule;
-use crate::text::split_lines;
+use crate::text::{dominant_newline, split_lines};
 use crate::violation::{Span, Violation};
 
 /// A file ends with a newline and at most one trailing blank line. Two or more
@@ -73,11 +73,7 @@ fn fixed_source(source: &str) -> String {
         return String::new();
     }
 
-    let convention = if source.contains("\r\n") {
-        "\r\n"
-    } else {
-        "\n"
-    };
+    let convention = dominant_newline(source);
     let last = content.len() - 1;
     let mut out = String::with_capacity(source.len());
     for (i, line) in content.iter().enumerate() {

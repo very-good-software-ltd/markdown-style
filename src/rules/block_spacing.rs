@@ -1,7 +1,7 @@
 use crate::ast::{Node, NodeKind};
 use crate::document::Document;
 use crate::rule::Rule;
-use crate::text::{Line, split_lines};
+use crate::text::{Line, dominant_newline, split_lines};
 use crate::violation::{Span, Violation};
 
 /// Blank lines between top-level blocks are normalised: two before a heading
@@ -49,11 +49,7 @@ fn rewrite(doc: &Document) -> (Vec<Violation>, String) {
         return (Vec::new(), doc.source.clone());
     }
 
-    let newline = if doc.source.contains("\r\n") {
-        "\r\n"
-    } else {
-        "\n"
-    };
+    let newline = dominant_newline(&doc.source);
     let mut violations = Vec::new();
     let mut out = String::with_capacity(doc.source.len());
 

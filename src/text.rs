@@ -5,6 +5,25 @@ pub struct Line<'a> {
     pub terminator: &'a str,
 }
 
+/// The line ending the source mostly uses, with LF settling a tie.
+///
+/// Fixers that insert a line ending ask for this rather than looking for a
+/// single `\r\n`, so one stray CRLF in an LF file cannot spread its style
+/// through the rest of the document. The `line-endings` rule normalises the
+/// stragglers using the same majority.
+pub fn dominant_newline(source: &str) -> &'static str {
+    let mut crlf = 0;
+    let mut lf = 0;
+    for line in split_lines(source) {
+        match line.terminator {
+            "\r\n" => crlf += 1,
+            "\n" => lf += 1,
+            _ => {}
+        }
+    }
+    if crlf > lf { "\r\n" } else { "\n" }
+}
+
 /// Split source into lines, preserving each line's terminator so the original
 /// text, including its line-ending style, can be reconstructed exactly.
 pub fn split_lines(source: &str) -> Vec<Line<'_>> {
