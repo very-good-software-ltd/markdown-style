@@ -78,3 +78,18 @@ jobs:
           docker build -t "$image:$TAG" -t "$image:latest" .
           docker push "$image:$TAG"
           docker push "$image:latest"
+
+  # Waits for the build, because the tap reads the release's assets. It is a
+  # job rather than a step in the matrix, since it is not per-target and would
+  # otherwise run once per archive.
+  registries:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      # The tap regenerates each formula from the GitHub API, so it only needs
+      # to be told that a release happened.
+      - name: Update Homebrew tap
+        env:
+          GH_TOKEN: ${{ secrets.TAP_DISPATCH_TOKEN }}
+        run: gh workflow run update-formulae.yml --repo very-good-software-ltd/homebrew-tap
