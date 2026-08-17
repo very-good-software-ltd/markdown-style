@@ -2,11 +2,11 @@
 
 An opinionated linter and formatter for Markdown.
 
-`markdown-style` has one bigger idea and a handful of small ones.
-The bigger idea is _one sentence per line_.
-The small ones are conventions that keep a Markdown file tidy, like stripping trailing whitespace and using a single heading style.
+`markdown-style` checks your Markdown against a set of conventions that keep a file tidy and its diffs small.
+The one doing most of the work is _one sentence per line_.
+The rest is ordinary hygiene, like stripping trailing whitespace and settling on a single heading style.
 
-It comes with a fixed set of rules and no configuration.
+The rule set is fixed and there is no configuration.
 That is deliberate.
 You point it at a file, it tells you what is off and why, and it can fix most of it for you.
 
@@ -18,7 +18,6 @@ Repetition jumps out at you, because near-identical sentences line up in the sou
 Overlong sentences announce themselves, because the line runs long.
 
 That second point is why the tool has _no_ line-length rule.
-A long line is not a problem to wrap away, it is feedback.
 If a line is too wide to read, the sentence is probably too long to read.
 
 `format` rewrites each paragraph to satisfy this: it joins your soft-wrapped lines back into logical text, then splits again at sentence boundaries.
