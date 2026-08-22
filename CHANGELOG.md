@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- `sentence-per-line` now reports the line that actually has to move.
+  When a paragraph only needed joining, the flag always landed on the paragraph's second line, whatever line the join happened on.
+
+
 ## [0.6.2] - 2026-08-15
 
 ### Fixed

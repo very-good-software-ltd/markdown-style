@@ -86,7 +86,7 @@ fn rewrite(doc: &Document) -> (Vec<Violation>, String) {
             violations.push(Violation {
                 rule_id: ID,
                 message: "put each sentence on its own line".to_string(),
-                span: boundary_span(slice, &stripped, start),
+                span: boundary_span(slice, &stripped, start, &before, &after),
             });
             let last_terminator = slice[slice.len() - 1].terminator;
             let emitted = emit(
@@ -160,9 +160,16 @@ fn original(slice: &[Line<'_>]) -> String {
 
 /// Point at the sentence that should move onto its own line, not the first
 /// sentence, which is already correct. That is the start of the second sentence
-/// on the first line that holds more than one. If none does (the paragraph only
-/// needs joining), point at the continuation line instead.
-fn boundary_span(slice: &[Line<'_>], stripped: &[&str], start: usize) -> Span {
+/// on the first line that holds more than one. If none does, the paragraph only
+/// needs joining, so point at the first line that gets pulled up onto the one
+/// above it rather than guessing at the paragraph's second line.
+fn boundary_span(
+    slice: &[Line<'_>],
+    stripped: &[&str],
+    start: usize,
+    before: &[String],
+    after: &[String],
+) -> Span {
     for (offset, content) in stripped.iter().enumerate() {
         let sentences: Vec<String> = produce(std::slice::from_ref(content))
             .into_iter()
@@ -181,11 +188,19 @@ fn boundary_span(slice: &[Line<'_>], stripped: &[&str], start: usize) -> Span {
         }
     }
 
-    if slice.len() > 1 {
-        let indent = slice[1].content.chars().take_while(|c| *c == ' ').count();
+    // The first line whose emitted form differs is the one that grew, so the
+    // line after it is the one that has to move up.
+    if let Some(offset) = first_difference(before, after)
+        && offset + 1 < slice.len()
+    {
+        let moved = offset + 1;
+        let original = slice[moved].content;
+        let column = original
+            .find(stripped[moved].trim_start())
+            .map_or(1, |byte| original[..byte].chars().count() + 1);
         return Span {
-            line: start + 1,
-            column: indent + 1,
+            line: start + moved,
+            column,
             length: 1,
         };
     }
@@ -195,6 +210,12 @@ fn boundary_span(slice: &[Line<'_>], stripped: &[&str], start: usize) -> Span {
         column: 1,
         length: 1,
     }
+}
+
+/// The first index at which the paragraph's source lines and its emitted
+/// sentences disagree, if any.
+fn first_difference(before: &[String], after: &[String]) -> Option<usize> {
+    (0..before.len().max(after.len())).find(|&index| before.get(index) != after.get(index))
 }
 
 /// Return the prefix for the first emitted line, the prefix for continuation
@@ -555,6 +576,26 @@ mod tests {
         assert_eq!(violations[0].span.line, 1);
         // "Second" begins at column 17, after "First sentence. ".
         assert_eq!(violations[0].span.column, 17);
+    }
+
+    #[test]
+    fn points_at_the_continuation_line_that_must_move_up() {
+        // Only the last two lines belong together, so the flag must land on the
+        // line that gets pulled up, not on the paragraph's second line.
+        let violations =
+            detect("Alpha stands alone.\nBeta stands alone.\nGamma keeps\ngoing to the end.\n");
+        assert_eq!(violations.len(), 1);
+        assert_eq!(violations[0].span.line, 4);
+        assert_eq!(violations[0].span.column, 1);
+    }
+
+    #[test]
+    fn points_past_a_blockquote_marker_when_joining() {
+        let violations = detect("> Alpha stands alone.\n> Gamma keeps\n> going to the end.\n");
+        assert_eq!(violations.len(), 1);
+        assert_eq!(violations[0].span.line, 3);
+        // Column 3 is the text, past the "> " marker.
+        assert_eq!(violations[0].span.column, 3);
     }
 
     #[test]
