@@ -3,16 +3,22 @@
 //! Works on a single logical line of plain text (no newlines). A boundary is a
 //! run of `.`/`!`/`?` (with any closing quotes) followed by whitespace and the
 //! start of a new sentence. A curated abbreviation list and single-letter
-//! initials suppress false boundaries. It is deliberately conservative: when in
-//! doubt it does not split, so it never runs together with per-run churn.
+//! initials suppress false boundaries, and an abbreviation that doubles as an
+//! ordinary word only counts when a number follows it. It is deliberately
+//! conservative: when in doubt it does not split, so it never runs together with
+//! per-run churn.
 
 /// Common abbreviations that end in a period but do not end a sentence. Stored
 /// lowercase, with the trailing period.
 const ABBREVIATIONS: &[&str] = &[
     "e.g.", "i.e.", "etc.", "vs.", "cf.", "al.", "esp.", "approx.", "dr.", "mr.", "mrs.", "ms.",
-    "prof.", "sr.", "jr.", "st.", "no.", "vol.", "fig.", "pp.", "inc.", "ltd.", "co.", "u.s.",
-    "u.k.", "a.m.", "p.m.",
+    "prof.", "sr.", "jr.", "st.", "vol.", "fig.", "pp.", "inc.", "ltd.", "co.", "u.s.", "u.k.",
+    "a.m.", "p.m.",
 ];
+
+/// Abbreviations that only abbreviate when a number follows, as in "No. 5".
+/// They are ordinary words otherwise, and an ordinary word can end a sentence.
+const NUMBER_ABBREVIATIONS: &[&str] = &["no."];
 
 /// Whether `text` ends with a terminator a boundary check would honor: a real
 /// `.`/`!`/`?` (past any closing quotes or emphasis markers) whose final word is
@@ -32,7 +38,7 @@ pub fn ends_with_sentence_terminator(text: &str) -> bool {
         word_start -= 1;
     }
     let token: String = chars[word_start..end].iter().collect();
-    !is_abbreviation(&token)
+    !is_abbreviation(&token, None)
 }
 
 /// Split `text` into sentences, each trimmed of surrounding whitespace.
@@ -104,16 +110,22 @@ fn is_boundary(chars: &[char], term_start: usize, run_end: usize, after: usize) 
         word_start -= 1;
     }
     let token: String = chars[word_start..run_end].iter().collect();
-    !is_abbreviation(&token)
+    !is_abbreviation(&token, chars.get(next).copied())
 }
 
-fn is_abbreviation(token: &str) -> bool {
+/// Whether `token` ends in a period that does not end a sentence. `following` is
+/// the first character of what comes next, which decides the number
+/// abbreviations, and is `None` when nothing follows.
+fn is_abbreviation(token: &str, following: Option<char>) -> bool {
     // Drop any leading punctuation, like an opening paren or quote, so a token
     // such as "(e.g." is still recognised as the abbreviation "e.g.".
     let token = token.trim_start_matches(|c: char| !c.is_alphanumeric());
     let lower = token.to_lowercase();
     if ABBREVIATIONS.contains(&lower.as_str()) {
         return true;
+    }
+    if NUMBER_ABBREVIATIONS.contains(&lower.as_str()) {
+        return matches!(following, Some(c) if c.is_ascii_digit());
     }
     // A single letter followed by a period is an initial, like "J." in a name.
     let core = token.trim_end_matches(['.', '!', '?']);
@@ -202,6 +214,22 @@ mod tests {
     }
 
     #[test]
+    fn splits_after_a_sentence_that_ends_in_no() {
+        assert_eq!(
+            split_sentences("The world said no. Then it moved on."),
+            vec!["The world said no.", "Then it moved on."]
+        );
+    }
+
+    #[test]
+    fn does_not_split_a_number_reference() {
+        assert_eq!(
+            split_sentences("See No. 5 for details."),
+            vec!["See No. 5 for details."]
+        );
+    }
+
+    #[test]
     fn does_not_split_initials() {
         assert_eq!(
             split_sentences("J. R. R. Tolkien wrote it."),
@@ -271,6 +299,11 @@ mod tests {
     #[test]
     fn does_not_treat_a_soft_wrap_as_a_sentence_end() {
         assert!(!ends_with_sentence_terminator("this clause keeps going"));
+    }
+
+    #[test]
+    fn treats_a_line_ending_in_no_as_a_sentence_end() {
+        assert!(ends_with_sentence_terminator("The world said no."));
     }
 
     #[test]

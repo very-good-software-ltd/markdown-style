@@ -747,6 +747,15 @@ mod tests {
     }
 
     #[test]
+    fn keeps_a_sentence_that_ends_in_no_on_its_own_line() {
+        // "no." is only an abbreviation before a number, so a line ending in the
+        // word itself must not be joined with the line below.
+        let source = "The world said no.\nYou cannot argue with a refusal.\n";
+        assert_eq!(fix(source), source);
+        assert!(detect(source).is_empty());
+    }
+
+    #[test]
     fn keeps_a_parenthesised_abbreviation_before_a_code_span_together() {
         // "(e.g. `foo`)" must not split before the code span: the abbreviation
         // guard has to see through the leading paren.

@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- `sentence-per-line` no longer runs a sentence ending in the word "no" into the line below.
+  "no." was on the abbreviation list for "No. 5", so it now only abbreviates when a number follows it.
 - `sentence-per-line` now reports the line that actually has to move.
   When a paragraph only needed joining, the flag always landed on the paragraph's second line, whatever line the join happened on.
 
