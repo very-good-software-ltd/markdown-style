@@ -40,6 +40,13 @@ brew install very-good-software-ltd/tap/markdown-style
 
 `brew trust` is needed because Homebrew asks you to trust a third-party tap before it will load a formula from it.
 
+Or with Scoop, on x86-64 Windows:
+
+```sh
+scoop bucket add very-good-software https://github.com/very-good-software-ltd/scoop-bucket
+scoop install very-good-software/markdown-style
+```
+
 Or download a prebuilt binary from the [releases page](https://github.com/very-good-software-ltd/markdown-style/releases), for Apple Silicon macOS, x86-64 Linux, or x86-64 Windows.
 Unpack the archive and put `markdown-style` somewhere on your `PATH`.
 

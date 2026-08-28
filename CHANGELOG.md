@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- A Scoop bucket at `very-good-software-ltd/scoop-bucket`, so Windows users can install and update with `scoop install very-good-software/markdown-style`.
+  The bucket regenerates its manifests from the latest release, the way the Homebrew tap does.
+
+
 ### Fixed
 
 - `sentence-per-line` no longer runs a sentence ending in the word "no" into the line below.
