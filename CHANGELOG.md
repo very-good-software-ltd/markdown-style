@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.6.3] - 2026-09-05
+
 ### Added
 
 - A Scoop bucket at `very-good-software-ltd/scoop-bucket`, so Windows users can install and update with `scoop install very-good-software/markdown-style`.
@@ -138,7 +140,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Idempotent formatting, so running `format` twice makes no further changes.
 - `rules --markdown` generates the rule catalogue in `docs/rules.md`, kept current by a test.
 
-[Unreleased]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.2...HEAD
+[Unreleased]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.3...HEAD
+[0.6.3]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.2...0.6.3
 [0.6.2]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.1...0.6.2
 [0.6.1]: https://github.com/very-good-software-ltd/markdown-style/compare/0.6.0...0.6.1
 [0.6.0]: https://github.com/very-good-software-ltd/markdown-style/compare/0.5.1...0.6.0
